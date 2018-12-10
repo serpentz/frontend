@@ -34,8 +34,33 @@ class App extends Component {
 
 
   updateCurrentUser = (user) => {
+
     this.setState({currentUser: user})
 	  if(!user){localStorage.clear()}
+  }
+
+editCurrentUser = (e) => {
+	let {username, email} = e
+
+	debugger
+
+	let options = {
+			method: "PATCH",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({username: username, email: email})
+	}
+
+	fetch(`http://localhost:3000/users/${this.state.currentUser.id}`,options)
+		.then(res => res.json())
+		.then(data => {
+			this.setState({currentUser: {...this.state.currentUser,username: username,email: email}})
+		})
+
+
+	 
   }
 
   render() {
@@ -47,6 +72,7 @@ class App extends Component {
 	          <Route exact path="/" render={() => <Redirect to="/login" />} />
 	          <Route exact path="/chatrooms" render={() => currentUser ?
 	            <ChatroomList
+	            	editCurrentUser={this.editCurrentUser}
 					updateCurrentUser={this.updateCurrentUser}
 					user={currentUser} /> :
 	            <Login updateCurrentUser={this.updateCurrentUser}/>}

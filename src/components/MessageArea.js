@@ -26,8 +26,6 @@ const MessagesArea = (props) => {
       <div className="card">
         <div className="card-header msg_head">
             <div className="d-flex bd-highlight">
-
-
           <div className="user_info">
             <span> {name} </span>
             <p> {messages.length} messages </p>

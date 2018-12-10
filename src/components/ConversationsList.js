@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActionCable } from 'react-actioncable-provider';
-import { API_ROOT } from '../constants/constants';
+import { API_ROOT,HEADERS } from '../constants/constants';
 import NewConversationForm from './NewConversationForm';
 import './custom.css'
 import Nav from './NavBar'
@@ -19,6 +19,21 @@ class ChatroomsList extends React.Component {
       .then(res => res.json())
       .then(chatrooms => this.setState({ chatrooms }));
   };
+
+
+
+    deleteCurrentUser = () => {
+
+        let options = {
+            method: "DELETE",
+            headers: HEADERS
+        }
+
+        fetch(`${API_ROOT}/users/${this.props.user.id}`,options)
+            .then(resp => console.log(resp))
+
+        this.props.updateCurrentUser(null)
+    }
 
   handleClick = id => {
     this.setState({ activeChatroom: id });
@@ -56,7 +71,11 @@ class ChatroomsList extends React.Component {
 
     return (
       <React.Fragment>
-        <Nav updateCurrentUser={this.props.updateCurrentUser}/>
+        <Nav
+            user={this.props.user}
+            editCurrentUser={this.props.editCurrentUser}
+            deleteCurrentUser={this.deleteCurrentUser}
+            updateCurrentUser={this.props.editCurrentUser}/>
         <div className="container-fluid h-100">
           <div className="row justify-content-center h-100">
             <ActionCable
@@ -78,8 +97,6 @@ class ChatroomsList extends React.Component {
                     {mapChatrooms(chatrooms, this.handleClick)} 
                   </ul>
                 </div>
-                
-
                 </div>
               </div>
 
